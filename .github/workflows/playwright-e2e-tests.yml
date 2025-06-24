@@ -3,7 +3,9 @@ name: Run playwright E2E tests
 on: 
   workflow_call:
     inputs:
-      # Example of prefix: "", "local-env-"
+      # In some services we are using prefixes to build docker images for local-env and prod-env with different tags
+      # Prefix defines which prefix will be used in image tag
+      # Example of prefix: local-env
       prefix:
         required: false
         type: string
@@ -11,13 +13,15 @@ on:
       path_to_values:
         required: true
         type: string
-      # Examples of deploy_env: "", "|
-                                  # PELICAN_UI_BRANCH=${{ github.head_ref || github.ref_name }}"
+      # deploy_env defines variables for local-env
+      # Examples of deploy_env: "|
+                              # PELICAN_UI_BRANCH=${{ github.head_ref || github.ref_name }}"
       deploy_env:
         required: false
         type: string
-      # Examples of playwright_env: "", "FRONTEND_URL: http://localhost:40110 
-                                        #API_URL: 'http://localhost:40110/cms/api'"
+      # playwright_env defines variables for playwright tests
+      # Examples of playwright_env: "FRONTEND_URL: http://localhost:40110 
+                                    #API_URL: 'http://localhost:40110/cms/api'"
       playwright_env:
         required: false
         type: string
@@ -62,10 +66,6 @@ jobs:
 
             helmfile --environment local --namespace local -f deploy/helmfile.yaml apply
           push: never
-          # this variable is used by local-env helmfile to use current feature branch helm chart values.yaml file
-          # this is needed for a case when as part of the feature the chart was changed and is different from master branch
-          # this should properly fill the feature branch name in spite of the pipeline trigger source (PR, commit, etc.)
-          # https://stackoverflow.com/a/71158878
           env: ${{ inputs.deploy_env }}
 
       - name: Checkout repository
