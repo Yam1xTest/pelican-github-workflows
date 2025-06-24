@@ -20,7 +20,7 @@ on:
         required: false
         type: string
       # Build-args used to define variables that will be used in image
-      # Examples of build-args: "|
+      # Example of build-args: "|
                           #CDN_ENABLED=true
                           #CDN_DOMAIN=cdn.chelzoo.tech"
       build-args:
