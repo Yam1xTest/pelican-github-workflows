@@ -9,16 +9,18 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Publish Docker image
+name: Publish Docker Image
 
 on:
   workflow_call:
     inputs:
-      # Examples of prefix: "", "local-env-"
+      # Prefix used to be able to build images for local-env and prod-env with different tags
+      # Example of prefix: local-env
       prefix:
         required: false
         type: string
-      # Examples of build-args: "", "|
+      # Build-args used to define variables that will be used in image
+      # Examples of build-args: "|
                           #CDN_ENABLED=true
                           #CDN_DOMAIN=cdn.chelzoo.tech"
       build-args:
@@ -54,9 +56,9 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=${{ inputs.prefix }}latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
-            type=sha,prefix=${{ inputs.prefix }}sha-
-            type=sha,format=long,prefix=${{ inputs.prefix }}sha-
+            type=raw,value=${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}latest,enable=${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
+            type=sha,prefix=${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-
+            type=sha,format=long,prefix=${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-
 
       - name: Build and push Docker image
         id: push
