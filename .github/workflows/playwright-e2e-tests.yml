@@ -14,14 +14,15 @@ on:
         required: true
         type: string
       # deploy_env defines variables for local-env
-      # Examples of deploy_env: "|
-                              # PELICAN_UI_BRANCH=${{ github.head_ref || github.ref_name }}"
+      # Example of deploy_env: "|
+                    # PELICAN_UI_BRANCH=feature/awesome_branch_name"
       deploy_env:
         required: false
         type: string
       # playwright_env defines variables for playwright tests
-      # Examples of playwright_env: "FRONTEND_URL: http://localhost:40110 
-                                    #API_URL: 'http://localhost:40110/cms/api'"
+      # Example of playwright_env: "|
+                    # FRONTEND_URL=http://localhost:40110 
+                    # API_URL=http://localhost:40110/cms/api"
       playwright_env:
         required: false
         type: string
@@ -45,7 +46,7 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           runCmd: |
-            # we need to override "latest" image tag of ui inside local-env to run tests against the current commit ui version and not against latest from master
+            # we need to override "latest" image tag of service inside local-env to run tests against the current commit service version and not against latest from master
             # We tried to use yq to change the image tag, but in the values files for helmfile we have non-yaml code that yq can`t parse or ignore
             # so for that reason we use Stream EDitor which can find needeed string using regular expressions and change it to a new value
             # The -i flag is needed to write new image tag directly to values file
