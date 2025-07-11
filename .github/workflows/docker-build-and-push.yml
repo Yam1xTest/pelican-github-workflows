@@ -28,7 +28,7 @@ on:
         type: string
 
 jobs:
-  build_amd64::
+  build_amd64:
     runs-on: ubuntu-22.04
     permissions:
       packages: write
