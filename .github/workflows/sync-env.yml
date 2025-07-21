@@ -48,6 +48,7 @@ jobs:
             "image_tag": "${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-${{ github.sha }}",
             "commit_message": ${{ toJson(github.event.head_commit.message) }},
             "repository": "${{ github.event.repository.name }}",
+            "sha": "${{ github.sha }}",
             "short_sha": "${{ env.SHORT_SHA }}",
             ${{ inputs.prefix && format('"prefix": "{0}",', inputs.prefix) || '' }}
             "path_to_values": "${{ inputs.path-to-values }}",
