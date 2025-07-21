@@ -18,6 +18,10 @@ on:
       path-to-values:
         required: true
         type: string
+      path-to-helmfile:
+        required: true
+        type: string
+
 jobs:
   trigger-env:
     runs-on: ubuntu-24.04
@@ -42,5 +46,7 @@ jobs:
             "commit_message": ${{ toJson(github.event.head_commit.message) }},
             "repository": "${{ github.event.repository.name }}",
             "short_sha": "${{ env.SHORT_SHA }}",
-            "path_to_values": "${{ inputs.path-to-values }}"
+            "path_to_values": "${{ inputs.path-to-values }}",
+            "path_to_helmfile": "${{ inputs.path-to-helmfile }}",
+            "service_name": "${{ github.event.repository.name }}"
             }}' 
