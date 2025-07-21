@@ -40,6 +40,6 @@ jobs:
             "commit_message": ${{ toJson(github.event.head_commit.message) }},
             "repository": "${{ github.event.repository.name }}",
             "short_sha": "${{ env.SHORT_SHA }}",
-            ${{ inputs.prefix && format('"prefix": "{0}"\,,', inputs.prefix) || '' }}
+            ${{ inputs.prefix && format('"prefix": "{0}",', inputs.prefix) || '' }}
             "path_to_values": "${{ inputs.path-to-values }}"
             }}' 
