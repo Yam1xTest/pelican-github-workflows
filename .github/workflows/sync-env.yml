@@ -1,0 +1,46 @@
+name: Trigger Env
+
+on:
+  workflow_call:
+    inputs:
+      # pelican-env defines which environment will be synchronized
+      # Examples of pelican-env: "pelican-local-env", "pelican-prod-env"
+      pelican-env:
+        required: true
+        type: string
+      # image-tag defines which tag will be written into values file
+      # Examples of image-tag: "local-env-sha-d322f9f4bd9a8b9fa33c827abc2c144e2e47ca42", "sha-d322f9f4bd9a8b9fa33c827abc2c144e2e47ca42"
+      image-tag:
+        required: true
+        type: string
+      # path-to-values defines where the values files is stored
+      # Examples of path-to-values: "pelican-local-env/deploy/values-ui.yaml.gotmpl", "pelican-prod-env/deploy/values-cms.yaml.gotmpl"
+      path-to-values:
+        required: true
+        type: string
+jobs:
+  trigger-env:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v3
+        
+      - name: Write short-sha to GitHub Env
+        run: |
+          echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
+        
+      - name: Trigger Env
+        # NOTE: quotes for commit_message not needed because toJson writes quotes automatically 
+        run: |
+          curl -X POST https://api.github.com/repos/TourmalineCore/${{ inputs.pelican-env }}/dispatches \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -u ${{ secrets.PELICAN_ENV_SYNC_TRIGGER_TOKEN  }} \
+          -d '{
+          "event_type": "latest-${{ github.event.repository.name }}-image-tag",
+          "client_payload": {
+            "image_tag": "${{ inputs.image-tag }}",
+            "commit_message": ${{ toJson(github.event.head_commit.message) }},
+            "repository": "${{ github.event.repository.name }}",
+            "short_sha": "${{ env.SHORT_SHA }}",
+            "path_to_values": "${{ inputs.path-to-values }}"
+            }}' 
