@@ -9,8 +9,13 @@ on:
         required: true
         type: string
       # path-to-values defines where the values files is stored
-      # Examples of path-to-values: "pelican-local-env/deploy/values-ui.yaml.gotmpl", "pelican-prod-env/deploy/values-cms.yaml.gotmpl"
+      # Examples of path-to-values: "deploy/values-ui.yaml.gotmpl"
       path-to-values:
+        required: true
+        type: string
+      # path-to-helmfile defines where the helmfile is stored
+      # Examples of path-to-helmfile: "deploy/helmfile.yaml"
+      path-to-helmfile:
         required: true
         type: string
       # We use CDN at prod, that enabling or disabling only during build and can't be enabled/disabled at runtime.   
@@ -43,7 +48,10 @@ jobs:
             "image_tag": "${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-${{ github.sha }}",
             "commit_message": ${{ toJson(github.event.head_commit.message) }},
             "repository": "${{ github.event.repository.name }}",
+            "sha": "${{ github.sha }}",
             "short_sha": "${{ env.SHORT_SHA }}",
             ${{ inputs.prefix && format('"prefix": "{0}",', inputs.prefix) || '' }}
-            "path_to_values": "${{ inputs.path-to-values }}"
+            "path_to_values": "${{ inputs.path-to-values }}",
+            "path_to_helmfile": "${{ inputs.path-to-helmfile }}",
+            "service_name": "${{ github.event.repository.name }}"
             }}' 
