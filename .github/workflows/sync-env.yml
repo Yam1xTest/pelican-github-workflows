@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: |
           MODIFIED_COMMIT_MESSAGE="${RAW_COMMIT_MESSAGE//\"/\'}"
-          echo "COMMIT_MESSAGE=${SANITIZED}" >> "$GITHUB_ENV"
+          echo "COMMIT_MESSAGE=${MODIFIED_COMMIT_MESSAGE}" >> "$GITHUB_ENV"
 
       - name: Trigger Env
         # NOTE: quotes for commit_message not needed because toJson writes quotes automatically 
