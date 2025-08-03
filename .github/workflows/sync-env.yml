@@ -28,8 +28,6 @@ on:
 jobs:
   trigger-env:
     runs-on: ubuntu-24.04
-    env: 
-      RAW_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
@@ -37,13 +35,6 @@ jobs:
       - name: Write short-sha to GitHub Env
         run: |
           echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
-
-      - name: Write commit message to GitHub Env
-        id: modified
-        shell: bash
-        run: |
-          MODIFIED_COMMIT_MESSAGE="${RAW_COMMIT_MESSAGE//\"/\'}"
-          echo "COMMIT_MESSAGE=${MODIFIED_COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
 
       - name: Trigger Env
         # NOTE: quotes for commit_message not needed because toJson writes quotes automatically 
