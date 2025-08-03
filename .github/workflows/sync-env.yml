@@ -46,7 +46,7 @@ jobs:
           "event_type": "latest-${{ github.event.repository.name }}-image-tag",
           "client_payload": {
             "image_tag": "${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-${{ github.sha }}",
-            "commit_message": ${{ toJson(github.event.head_commit.message) | sed 's/'\"'/'\''/g'  }},
+            "commit_message": ${{ toJson(github.event.head_commit.message) | (sed 's/'\"'/'\''/g')  }},
             "repository": "${{ github.event.repository.name }}",
             "sha": "${{ github.sha }}",
             "short_sha": "${{ env.SHORT_SHA }}",
