@@ -39,10 +39,11 @@ jobs:
           echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
 
       - name: Write commit message to GitHub Env
+        id: modified
         shell: bash
         run: |
           MODIFIED_COMMIT_MESSAGE="${RAW_COMMIT_MESSAGE//\"/\'}"
-          echo "COMMIT_MESSAGE=${MODIFIED_COMMIT_MESSAGE}" >> "$GITHUB_ENV"
+          echo "COMMIT_MESSAGE=${MODIFIED_COMMIT_MESSAGE}" >> "$GITHUB_OUTPUT"
 
       - name: Trigger Env
         # NOTE: quotes for commit_message not needed because toJson writes quotes automatically 
@@ -54,7 +55,7 @@ jobs:
           "event_type": "latest-${{ github.event.repository.name }}-image-tag",
           "client_payload": {
             "image_tag": "${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-${{ github.sha }}",
-            "commit_message": ${{ toJson(env.COMMIT_MESSAGE) }},
+            "commit_message": ${{ toJson(steps.modified.outputs.COMMIT_MESSAGE) }},
             "repository": "${{ github.event.repository.name }}",
             "sha": "${{ github.sha }}",
             "short_sha": "${{ env.SHORT_SHA }}",
