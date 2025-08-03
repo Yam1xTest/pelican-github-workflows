@@ -26,9 +26,9 @@ on:
       build-args:
         required: false
         type: string
-      # Env is used to write current env to digest name to be able to build several docker images for several envs in one workflow
-      # Example of env: local
-      env:
+      # build-env is used to write current env to digest name to be able to build several docker images for several envs in one workflow
+      # Example of build-env: local
+      build-env:
         required: false
         type: string
 
@@ -81,7 +81,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}${{ inputs.env && format('-{0}', inputs.env) || '' }}
+          name: digests-${{ env.PLATFORM_PAIR }}${{ inputs.build-env && format('-{0}', inputs.build-env) || '' }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -133,7 +133,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}${{ inputs.env && format('-{0}', inputs.env) || '' }}
+          name: digests-${{ env.PLATFORM_PAIR }}${{ inputs.build-env && format('-{0}', inputs.build-env) || '' }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 1
