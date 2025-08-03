@@ -28,6 +28,8 @@ on:
 jobs:
   trigger-env:
     runs-on: ubuntu-24.04
+    env: 
+      RAW_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
@@ -35,7 +37,13 @@ jobs:
       - name: Write short-sha to GitHub Env
         run: |
           echo "SHORT_SHA=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_ENV
-        
+
+      - name: Write commit message to GitHub Env
+        shell: bash
+        run: |
+          MODIFIED_COMMIT_MESSAGE="${RAW_COMMIT_MESSAGE//\"/\'}"
+          echo "COMMIT_MESSAGE=${SANITIZED}" >> "$GITHUB_ENV"
+
       - name: Trigger Env
         # NOTE: quotes for commit_message not needed because toJson writes quotes automatically 
         run: |
@@ -46,7 +54,7 @@ jobs:
           "event_type": "latest-${{ github.event.repository.name }}-image-tag",
           "client_payload": {
             "image_tag": "${{ inputs.prefix && format('{0}-', inputs.prefix) || '' }}sha-${{ github.sha }}",
-            "commit_message": ${{ toJson(github.event.head_commit.message/\"/\') }},
+            "commit_message": ${{ toJson(env.COMMIT_MESSAGE) }},
             "repository": "${{ github.event.repository.name }}",
             "sha": "${{ github.sha }}",
             "short_sha": "${{ env.SHORT_SHA }}",
