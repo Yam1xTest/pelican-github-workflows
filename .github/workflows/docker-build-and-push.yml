@@ -46,6 +46,12 @@ jobs:
           platform=linux/amd64
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/yam1xtest/${{ github.event.repository.name }}
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -61,6 +67,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64
+          labels: ${{ steps.meta.outputs.labels }}
           tags: ghcr.io/yam1xtest/${{ github.event.repository.name }}
           build-args: ${{ inputs.build-args }}
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
@@ -90,7 +97,13 @@ jobs:
         run: |
           platform=linux/arm64
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-
+          
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/yam1xtest/${{ github.event.repository.name }}
+          
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -106,6 +119,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           platforms: linux/arm64
+          labels: ${{ steps.meta.outputs.labels }}
           tags: ghcr.io/yam1xtest/${{ github.event.repository.name }}
           build-args: ${{ inputs.build-args }}
           outputs: type=image,push-by-digest=true,name-canonical=true,push=true
