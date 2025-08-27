@@ -188,6 +188,9 @@ jobs:
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
             $(printf 'ghcr.io/yam1xtest/${{ github.event.repository.name }}@sha256:%s ' *)
 
+      - name: build history
+        run: docker builder history ls
+
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ghcr.io/yam1xtest/${{ github.event.repository.name }}:${{ steps.meta.outputs.version }}
