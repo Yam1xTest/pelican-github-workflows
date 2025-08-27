@@ -185,7 +185,7 @@ jobs:
       - name: print
         working-directory: ${{ runner.temp }}/digests
         run: |
-          $(printf 'ghcr.io/yam1xtest/${{ github.event.repository.name }}@sha256:%s ' *)
+          echo $(printf 'ghcr.io/yam1xtest/${{ github.event.repository.name }}@sha256:%s ' *)
 
       - name: Create manifest list and push
         working-directory: ${{ runner.temp }}/digests
