@@ -64,6 +64,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
+          context: .
           platforms: linux/amd64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ghcr.io/yam1xtest/${{ github.event.repository.name }}
@@ -120,6 +121,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
+          context: .
           platforms: linux/arm64
           labels: ${{ steps.meta.outputs.labels }}
           tags: ghcr.io/yam1xtest/${{ github.event.repository.name }}
