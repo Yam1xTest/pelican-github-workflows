@@ -85,7 +85,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}${{ inputs.build-env && format('-{0}', inputs.build-env) || '' }}
+          name: ${{ inputs.build-env && format('{0}-', inputs.build-env) || '' }}digests-${{ env.PLATFORM_PAIR }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -135,7 +135,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}${{ inputs.build-env && format('-{0}', inputs.build-env) || '' }}
+          name: ${{ inputs.build-env && format('{0}-', inputs.build-env) || '' }}digests-${{ env.PLATFORM_PAIR }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -150,7 +150,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ${{ runner.temp }}/digests
-          pattern: digests-*
+          pattern: ${{ inputs.build-env && format('{0}-', inputs.build-env) || '' }}digests-*
           merge-multiple: true
 
       - name: ls
